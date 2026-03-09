@@ -29,7 +29,7 @@ public class LitematicaExporter {
 		CompoundTag root;
 		try (InputStream is = Files.newInputStream(Paths.get(path));
 		     GZIPInputStream gzis = new GZIPInputStream(is)) {
-			root = NbtIo.readCompressed(gzis, NbtAccounter.unlimitedHeap());
+			root = NbtIo.readCompressed(gzis);
 		}
 		
 		// 获取Regions
@@ -80,7 +80,7 @@ public class LitematicaExporter {
 					writer.printf("%s,%s,%s,%d = %s%n",
 					              translate("item", entry.getKey().name),
 					              entry.getKey().name,
-					              NbtHelper.toPrettyPrintableString(entry.getKey().tag, 0, true),
+					              entry.getKey().tag.toString(),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -90,7 +90,7 @@ public class LitematicaExporter {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
 						              translate("item", itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              NbtHelper.toPrettyPrintableString(itemEntry.getKey().tag, 0, true),
+						              itemEntry.getKey().tag.toString(),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -117,7 +117,7 @@ public class LitematicaExporter {
 					writer.printf("%s,%s,%s,%d = %s%n",
 					              translate("item", entry.getKey().name),
 					              entry.getKey().name,
-					              NbtHelper.toPrettyPrintableString(entry.getKey().tag, 0, true),
+					              entry.getKey().toString(),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -127,7 +127,7 @@ public class LitematicaExporter {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
 						              translate("item", itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              NbtHelper.toPrettyPrintableString(itemEntry.getKey().tag, 0, true),
+						              itemEntry.getKey().tag.toString(),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -142,7 +142,7 @@ public class LitematicaExporter {
 					writer.printf("%s,%s,%s,%d = %s%n",
 					              translate("item", entry.getKey().name),
 					              entry.getKey().name,
-					              NbtHelper.toPrettyPrintableString(entry.getKey().tag, 0, true),
+					              entry.getKey().tag.toString(),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -152,7 +152,7 @@ public class LitematicaExporter {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
 						              translate("item", itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              NbtHelper.toPrettyPrintableString(itemEntry.getKey().tag, 0, true),
+						              itemEntry.getKey().tag.toString(),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -205,7 +205,7 @@ public class LitematicaExporter {
 				stats.entities.add(new NoTagItemInfo(entity.name()), 1);
 				
 				var slots = EntityProcess.entityToSlot(entity);
-				slots = new EntitySlotResult(
+				slots = new EntityProcess.EntitySlotResult(
 					ItemProcess.unpackContainer(slots.containers(), 128),
 					ItemProcess.unpackContainer(slots.inventories(), 128)
 				);
