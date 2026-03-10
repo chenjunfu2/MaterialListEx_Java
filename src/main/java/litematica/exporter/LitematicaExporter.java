@@ -108,13 +108,13 @@ public class LitematicaExporter {
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
 				for (var parentEntry : region.parentInfoTEC.entrySet()) {
+					writeCSVLine(writer,"","","","",translate(Language.KeyType.ITEM, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")");
 					for (var itemEntry : parentEntry.getValue().sortedList) {
 						writeCSVLine(writer,
 						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						             itemEntry.getKey().name,
 						             NbtHelper.serialize(itemEntry.getKey().tag),
-						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get()),
-						             translate(Language.KeyType.ITEM, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")"
+						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get())
 						            );
 					}
 				}
@@ -145,13 +145,13 @@ public class LitematicaExporter {
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
 				for (var parentEntry : region.parentInfoEC.entrySet()) {
+					writeCSVLine(writer,"","","","",translate(Language.KeyType.ENTITY, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")");
 					for (var itemEntry : parentEntry.getValue().sortedList) {
 						writeCSVLine(writer,
 						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						             itemEntry.getKey().name,
 						             NbtHelper.serialize(itemEntry.getKey().tag),
-						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get()),
-						             translate(Language.KeyType.ENTITY, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")"
+						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get())
 						            );
 					}
 				}
@@ -170,13 +170,13 @@ public class LitematicaExporter {
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
 				for (var parentEntry : region.parentInfoEI.entrySet()) {
+					writeCSVLine(writer,"","","","",translate(Language.KeyType.ENTITY, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")");
 					for (var itemEntry : parentEntry.getValue().sortedList) {
 						writeCSVLine(writer,
 						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						             itemEntry.getKey().name,
 						             NbtHelper.serialize(itemEntry.getKey().tag),
-						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get()),
-						             translate(Language.KeyType.ENTITY, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")"
+						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get())
 						            );
 					}
 				}
