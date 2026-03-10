@@ -247,4 +247,15 @@ public class CompoundTag implements Tag {
     public double getDoubleOr(String key, double defaultValue) {
         return contains(key, TAG_DOUBLE) ? getDouble(key) : defaultValue;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof CompoundTag other)) {
+            return false;
+        }
+	    return tags.equals(other.tags);
+    }
 }

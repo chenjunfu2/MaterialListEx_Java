@@ -28,4 +28,9 @@ public class EndTag implements Tag {
 	public String toString() {
 		return "END";
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof EndTag;
+	}
 }

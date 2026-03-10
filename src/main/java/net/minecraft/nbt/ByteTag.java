@@ -43,4 +43,15 @@ public class ByteTag extends NumericTag {
     public static ByteTag valueOf(boolean b) {
         return new ByteTag((byte)(b ? 1 : 0));
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ByteTag other)) {
+            return false;
+        }
+	    return value == other.value;
+    }
 }

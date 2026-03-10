@@ -39,4 +39,15 @@ public class DoubleTag extends NumericTag {
     public float getAsFloat() { return (float) value; }
     @Override
     public Number getAsNumber() { return value; }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof DoubleTag other)) {
+            return false;
+        }
+	    return Double.doubleToLongBits(value) == Double.doubleToLongBits(other.value);
+    }
 }

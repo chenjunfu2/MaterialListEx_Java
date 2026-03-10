@@ -87,11 +87,11 @@ public class LitematicaExporter {
 				writer.println("类型(Type),[block item]");
 				writer.println("名称(Name),键名(Key),数量(Count)");
 				for (var entry : region.blockItems.sortedList) {
-					writer.printf("%s,%s,%d = %s%n",
-					              translate(Language.KeyType.ITEM, entry.getKey().name()),
-					              entry.getKey().name(),
-					              entry.getValue().get(),
-					              formatCount(entry.getValue().get()));
+					writeCSVLine(writer,
+					             translate(Language.KeyType.ITEM, entry.getKey().name()),
+					             entry.getKey().name(),
+					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					            );
 				}
 				writer.println();
 				
@@ -99,23 +99,23 @@ public class LitematicaExporter {
 				writer.println("类型(Type),[tile entity container]");
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count)");
 				for (var entry : region.tileEntityContainers.sortedList) {
-					writer.printf("%s,%s,%s,%d = %s%n",
-					              translate(Language.KeyType.ITEM, entry.getKey().name),
-					              entry.getKey().name,
-					              NbtHelper.serialize(entry.getKey().tag),
-					              entry.getValue().get(),
-					              formatCount(entry.getValue().get()));
+					writeCSVLine(writer,
+					             translate(Language.KeyType.ITEM, entry.getKey().name),
+					             entry.getKey().name,
+					             NbtHelper.serialize(entry.getKey().tag),
+					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					            );
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
 				for (var parentEntry : region.parentInfoTEC.entrySet()) {
 					for (var itemEntry : parentEntry.getValue().sortedList) {
-						writer.printf("%s,%s,%s,%d = %s,%s%n",
-						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
-						              itemEntry.getKey().name,
-						              NbtHelper.serialize(itemEntry.getKey().tag),
-						              itemEntry.getValue().get(),
-						              formatCount(itemEntry.getValue().get()),
-						              parentEntry.getKey());
+						writeCSVLine(writer,
+						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
+						             itemEntry.getKey().name,
+						             NbtHelper.serialize(itemEntry.getKey().tag),
+						             itemEntry.getValue().get() + " = " + formatCount(itemEntry.getValue().get()),
+						             parentEntry.getKey()
+						            );
 					}
 				}
 				writer.println();
@@ -124,11 +124,11 @@ public class LitematicaExporter {
 				writer.println("类型(Type),[entity info]");
 				writer.println("名称(Name),键名(Key),数量(Count)");
 				for (var entry : region.entities.sortedList) {
-					writer.printf("%s,%s,%d = %s%n",
-					              translate(Language.KeyType.ENTITY, entry.getKey().name()),
-					              entry.getKey().name(),
-					              entry.getValue().get(),
-					              formatCount(entry.getValue().get()));
+					writeCSVLine(writer,
+					             translate(Language.KeyType.ENTITY, entry.getKey().name()),
+					             entry.getKey().name(),
+					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					            );
 				}
 				writer.println();
 				
@@ -136,23 +136,23 @@ public class LitematicaExporter {
 				writer.println("类型(Type),[entity container]");
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count)");
 				for (var entry : region.entityContainers.sortedList) {
-					writer.printf("%s,%s,%s,%d = %s%n",
-					              translate(Language.KeyType.ITEM, entry.getKey().name),
-					              entry.getKey().name,
-					              NbtHelper.serialize(entry.getKey().tag),
-					              entry.getValue().get(),
-					              formatCount(entry.getValue().get()));
+					writeCSVLine(writer,
+					             translate(Language.KeyType.ITEM, entry.getKey().name),
+					             entry.getKey().name,
+					             NbtHelper.serialize(entry.getKey().tag),
+					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					            );
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
 				for (var parentEntry : region.parentInfoEC.entrySet()) {
 					for (var itemEntry : parentEntry.getValue().sortedList) {
-						writer.printf("%s,%s,%s,%d = %s,%s%n",
-						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
-						              itemEntry.getKey().name,
-						              NbtHelper.serialize(itemEntry.getKey().tag),
-						              itemEntry.getValue().get(),
-						              formatCount(itemEntry.getValue().get()),
-						              parentEntry.getKey());
+						writeCSVLine(writer,
+						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
+						             itemEntry.getKey().name,
+						             NbtHelper.serialize(itemEntry.getKey().tag),
+						             itemEntry.getValue().get() + " = " + formatCount(itemEntry.getValue().get()),
+						             parentEntry.getKey()
+						            );
 					}
 				}
 				writer.println();
@@ -161,23 +161,23 @@ public class LitematicaExporter {
 				writer.println("类型(Type),[entity inventory]");
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count)");
 				for (var entry : region.entityInventories.sortedList) {
-					writer.printf("%s,%s,%s,%d = %s%n",
-					              translate(Language.KeyType.ITEM, entry.getKey().name),
-					              entry.getKey().name,
-					              NbtHelper.serialize(entry.getKey().tag),
-					              entry.getValue().get(),
-					              formatCount(entry.getValue().get()));
+					writeCSVLine(writer,
+					             translate(Language.KeyType.ITEM, entry.getKey().name),
+					             entry.getKey().name,
+					             NbtHelper.serialize(entry.getKey().tag),
+					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					            );
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
 				for (var parentEntry : region.parentInfoEI.entrySet()) {
 					for (var itemEntry : parentEntry.getValue().sortedList) {
-						writer.printf("%s,%s,%s,%d = %s,%s%n",
-						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
-						              itemEntry.getKey().name,
-						              NbtHelper.serialize(itemEntry.getKey().tag),
-						              itemEntry.getValue().get(),
-						              formatCount(itemEntry.getValue().get()),
-						              parentEntry.getKey());
+						writeCSVLine(writer,
+						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
+						             itemEntry.getKey().name,
+						             NbtHelper.serialize(itemEntry.getKey().tag),
+						             itemEntry.getValue().get() + " = " + formatCount(itemEntry.getValue().get()),
+						             parentEntry.getKey()
+						            );
 					}
 				}
 				writer.println();
@@ -185,6 +185,46 @@ public class LitematicaExporter {
 		}
 		
 		System.out.println("Output: " + outputPath);
+	}
+	
+	/**
+	 * CSV字段转义：将字段中的双引号替换为两个双引号，并用双引号包围整个字段
+	 */
+	private static String escapeCSV(String field) {
+		if (field == null) return "";
+		
+		// 如果字段包含逗号、换行符或双引号，则需要转义
+		boolean needQuote = field.indexOf(',') >= 0 ||
+		                    field.indexOf('\n') >= 0 ||
+		                    field.indexOf('"') >= 0;
+		
+		if (!needQuote) {
+			return field;
+		}
+		
+		// 将双引号替换为两个双引号
+		String escaped = field.replace("\"", "\"\"");
+		// 用双引号包围整个字段
+		return "\"" + escaped + "\"";
+	}
+	
+	/**
+	 * 写入一行CSV数据，自动处理字段转义
+	 */
+	private static void writeCSVLine(PrintWriter writer, String... fields) {
+		if (fields.length == 0) {
+			writer.println();
+			return;
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < fields.length; i++) {
+			if (i > 0) {
+				sb.append(',');
+			}
+			sb.append(escapeCSV(fields[i]));
+		}
+		writer.println(sb.toString());
 	}
 	
 	private static List<RegionStats> processRegions(CompoundTag regions) {

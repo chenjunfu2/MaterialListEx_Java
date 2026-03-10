@@ -39,4 +39,15 @@ public class LongTag extends NumericTag {
     public float getAsFloat() { return value; }
     @Override
     public Number getAsNumber() { return value; }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof LongTag other)) {
+            return false;
+        }
+	    return value == other.value;
+    }
 }

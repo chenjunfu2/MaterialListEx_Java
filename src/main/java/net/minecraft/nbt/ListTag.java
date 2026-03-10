@@ -285,11 +285,10 @@ public class ListTag implements Tag {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof ListTag)) {
+        if (!(obj instanceof ListTag other)) {
             return false;
         }
-        ListTag other = (ListTag) obj;
-        return Objects.equals(list, other.list);
+	    return Objects.equals(list, other.list);
     }
     
     @Override

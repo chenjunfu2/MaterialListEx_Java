@@ -43,4 +43,15 @@ public class FloatTag extends NumericTag {
     public static FloatTag valueOf(float f) {
         return new FloatTag(f);
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof FloatTag other)) {
+            return false;
+        }
+	    return Float.floatToIntBits(value) == Float.floatToIntBits(other.value);
+    }
 }

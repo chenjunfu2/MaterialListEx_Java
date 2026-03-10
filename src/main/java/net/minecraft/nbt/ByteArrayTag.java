@@ -30,4 +30,15 @@ public class ByteArrayTag implements Tag {
     public byte[] getValue() {
         return value;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof ByteArrayTag other)) {
+            return false;
+        }
+	    return Arrays.equals(value, other.value);
+    }
 }

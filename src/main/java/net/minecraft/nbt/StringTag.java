@@ -42,4 +42,15 @@ public class StringTag implements Tag {
     public static StringTag valueOf(String s) {
         return new StringTag(s);
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof StringTag other)) {
+            return false;
+        }
+	    return value.equals(other.value);
+    }
 }

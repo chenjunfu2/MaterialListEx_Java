@@ -137,18 +137,18 @@ public class NbtHelper {
 	}
 	
 	private static void toHexString(byte value, StringBuilder sb) {
-		sb.append(String.format("%02X", value & 0xFF));
+		sb.append(String.format("0x%02X", value & 0xFF));
 	}
 	
 	private static void toHexString(short value, StringBuilder sb) {
-		sb.append(String.format("%04X", value & 0xFFFF));
+		sb.append(String.format("0x%04X", value & 0xFFFF));
 	}
 	
 	private static void toHexString(int value, StringBuilder sb) {
-		sb.append(String.format("%08X", value));
+		sb.append(String.format("0x%08X", value));
 	}
 	
 	private static void toHexString(long value, StringBuilder sb) {
-		sb.append(String.format("%016X", value));
+		sb.append(String.format("0x%016X", value));
 	}
 }
