@@ -115,7 +115,7 @@ class MapMSL<K> extends HashMap<K, MapSortList<ItemInfo>> {
 
 // 区域统计
 class RegionStats {
-	String regionName;
+	final String regionName;
 	final MapSortList<NoTagItemInfo> blockItems = new MapSortList<>();      // 方块转物品
 	final MapSortList<ItemInfo> tileEntityContainers = new MapSortList<>(); // 方块实体容器
 	final MapMSL<String> parentInfoTEC = new MapMSL<>();                    // 带来源的方块实体

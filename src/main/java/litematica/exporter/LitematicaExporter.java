@@ -67,9 +67,7 @@ public class LitematicaExporter {
 		
 		// 合并所有区域
 		if (regionStatsList.size() > 1) {
-			RegionStats merged = mergeRegions(regionStatsList);
-			merged.regionName = "[All Region]";
-			regionStatsList.add(merged);
+			regionStatsList.add(mergeRegions(regionStatsList));
 		}
 		
 		// 输出CSV
@@ -302,7 +300,7 @@ public class LitematicaExporter {
 	}
 	
 	private static RegionStats mergeRegions(List<RegionStats> regions) {
-		RegionStats merged = new RegionStats("");
+		RegionStats merged = new RegionStats("[All Region]");
 		for (RegionStats r : regions) {
 			merged.merge(r);
 		}
