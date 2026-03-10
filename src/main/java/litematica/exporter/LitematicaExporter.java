@@ -1,17 +1,42 @@
 package litematica.exporter;
 
+import com.google.gson.JsonObject;
 import net.minecraft.nbt.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 public class LitematicaExporter {
 	
+	private static Language language;
+	
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Usage: java LitematicaExporter <file.litematic>");
 			return;
+		}
+		
+		// 加载语言文件
+		try {
+			String langFile = "zh_cn.json";
+			Path langPath = Paths.get(langFile);
+			if (!Files.exists(langPath)) {
+				// 尝试从程序所在目录查找
+				String jarPath = LitematicaExporter.class.getProtectionDomain()
+				                                         .getCodeSource().getLocation().getPath();
+				Path jarDir = Paths.get(jarPath).getParent();
+				if (jarDir != null) {
+					langPath = jarDir.resolve(langFile);
+				}
+			}
+			
+			language = Language.load(langPath.toString());
+			System.out.println("Language file loaded: " + langPath);
+		} catch (IOException e) {
+			System.err.println("Failed to load language file: " + e.getMessage());
+			language = new Language();
 		}
 		
 		String inputFile = args[0];
@@ -49,7 +74,8 @@ public class LitematicaExporter {
 		
 		// 输出CSV
 		String outputPath = path.replace(".litematic", ".csv");
-		try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(Paths.get(outputPath)))) {
+		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(
+			Files.newOutputStream(Paths.get(outputPath)), StandardCharsets.UTF_8))) {
 			// 写入BOM
 			writer.write('\uFEFF');
 			
@@ -62,7 +88,7 @@ public class LitematicaExporter {
 				writer.println("名称(Name),键名(Key),数量(Count)");
 				for (var entry : region.blockItems.sortedList) {
 					writer.printf("%s,%s,%d = %s%n",
-					              translate("item", entry.getKey().name()),
+					              translate(Language.KeyType.ITEM, entry.getKey().name()),
 					              entry.getKey().name(),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
@@ -74,9 +100,9 @@ public class LitematicaExporter {
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count)");
 				for (var entry : region.tileEntityContainers.sortedList) {
 					writer.printf("%s,%s,%s,%d = %s%n",
-					              translate("item", entry.getKey().name),
+					              translate(Language.KeyType.ITEM, entry.getKey().name),
 					              entry.getKey().name,
-					              entry.getKey().tag.toString(),
+					              serializeTag(entry.getKey().tag),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -84,9 +110,9 @@ public class LitematicaExporter {
 				for (var parentEntry : region.parentInfoTEC.entrySet()) {
 					for (var itemEntry : parentEntry.getValue().sortedList) {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
-						              translate("item", itemEntry.getKey().name),
+						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              itemEntry.getKey().tag.toString(),
+						              serializeTag(itemEntry.getKey().tag),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -99,7 +125,7 @@ public class LitematicaExporter {
 				writer.println("名称(Name),键名(Key),数量(Count)");
 				for (var entry : region.entities.sortedList) {
 					writer.printf("%s,%s,%d = %s%n",
-					              translate("entity", entry.getKey().name()),
+					              translate(Language.KeyType.ENTITY, entry.getKey().name()),
 					              entry.getKey().name(),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
@@ -111,9 +137,9 @@ public class LitematicaExporter {
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count)");
 				for (var entry : region.entityContainers.sortedList) {
 					writer.printf("%s,%s,%s,%d = %s%n",
-					              translate("item", entry.getKey().name),
+					              translate(Language.KeyType.ITEM, entry.getKey().name),
 					              entry.getKey().name,
-					              entry.getKey().toString(),
+					              serializeTag(entry.getKey().tag),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -121,9 +147,9 @@ public class LitematicaExporter {
 				for (var parentEntry : region.parentInfoEC.entrySet()) {
 					for (var itemEntry : parentEntry.getValue().sortedList) {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
-						              translate("item", itemEntry.getKey().name),
+						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              itemEntry.getKey().tag.toString(),
+						              serializeTag(itemEntry.getKey().tag),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -136,9 +162,9 @@ public class LitematicaExporter {
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count)");
 				for (var entry : region.entityInventories.sortedList) {
 					writer.printf("%s,%s,%s,%d = %s%n",
-					              translate("item", entry.getKey().name),
+					              translate(Language.KeyType.ITEM, entry.getKey().name),
 					              entry.getKey().name,
-					              entry.getKey().tag.toString(),
+					              serializeTag(entry.getKey().tag),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -146,9 +172,9 @@ public class LitematicaExporter {
 				for (var parentEntry : region.parentInfoEI.entrySet()) {
 					for (var itemEntry : parentEntry.getValue().sortedList) {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
-						              translate("item", itemEntry.getKey().name),
+						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              itemEntry.getKey().tag.toString(),
+						              serializeTag(itemEntry.getKey().tag),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -186,7 +212,7 @@ public class LitematicaExporter {
 				for (var item : items) {
 					ItemInfo info = new ItemInfo(item.name(), item.tag());
 					stats.tileEntityContainers.add(info, item.count());
-					if (te.name() != null) {
+					if (te.name() != null && !te.name().isEmpty()) {
 						stats.parentInfoTEC
 							.computeIfAbsent(te.name(), k -> new MapSortList<>())
 							.add(info, item.count());
@@ -209,17 +235,21 @@ public class LitematicaExporter {
 				for (var item : slots.containers()) {
 					ItemInfo info = new ItemInfo(item.name(), item.tag());
 					stats.entityContainers.add(info, item.count());
-					stats.parentInfoEC
-						.computeIfAbsent(entity.name(), k -> new MapSortList<>())
-						.add(info, item.count());
+					if (entity.name() != null && !entity.name().isEmpty()) {
+						stats.parentInfoEC
+							.computeIfAbsent(entity.name(), k -> new MapSortList<>())
+							.add(info, item.count());
+					}
 				}
 				
 				for (var item : slots.inventories()) {
 					ItemInfo info = new ItemInfo(item.name(), item.tag());
 					stats.entityInventories.add(info, item.count());
-					stats.parentInfoEI
-						.computeIfAbsent(entity.name(), k -> new MapSortList<>())
-						.add(info, item.count());
+					if (entity.name() != null && !entity.name().isEmpty()) {
+						stats.parentInfoEI
+							.computeIfAbsent(entity.name(), k -> new MapSortList<>())
+							.add(info, item.count());
+					}
 				}
 			}
 			
@@ -239,21 +269,93 @@ public class LitematicaExporter {
 		return merged;
 	}
 	
-	// 简化的翻译函数
-	private static String translate(String type, String key) {
-		// 这里可以集成JSON语言文件
+	// 翻译函数
+	private static String translate(Language.KeyType type, String key) {
+		if (language != null) {
+			return language.translate(type, key);
+		}
 		return key.replace(':', '.');
+	}
+	
+	// 序列化NBT标签
+	private static String serializeTag(CompoundTag tag) {
+		if (tag == null || tag.isEmpty()) {
+			return "";
+		}
+		
+		StringBuilder sb = new StringBuilder("{");
+		boolean first = true;
+		
+		// 排序键名以获得一致输出
+		List<String> keys = new ArrayList<>(tag.getAllKeys());
+		Collections.sort(keys);
+		
+		for (String key : keys) {
+			if (!first) {
+				sb.append(",");
+			}
+			first = false;
+			
+			sb.append("\"").append(key).append("\":");
+			Tag value = tag.get(key);
+			
+			if (value instanceof CompoundTag) {
+				sb.append(serializeTag((CompoundTag) value));
+			} else if (value instanceof ListTag) {
+				sb.append(serializeList((ListTag) value));
+			} else if (value instanceof StringTag) {
+				sb.append("\"").append(value.getAsString()).append("\"");
+			} else if (value instanceof NumericTag) {
+				sb.append(value);
+			} else {
+				sb.append(value.toString());
+			}
+		}
+		
+		sb.append("}");
+		return sb.toString();
+	}
+	
+	private static String serializeList(ListTag list) {
+		StringBuilder sb = new StringBuilder("[");
+		boolean first = true;
+		
+		for (int i = 0; i < list.size(); i++) {
+			if (!first) {
+				sb.append(",");
+			}
+			first = false;
+			
+			Tag value = list.get(i);
+			if (value instanceof CompoundTag) {
+				sb.append(serializeTag((CompoundTag) value));
+			} else if (value instanceof ListTag) {
+				sb.append(serializeList((ListTag) value));
+			} else if (value instanceof StringTag) {
+				sb.append("\"").append(value.getAsString()).append("\"");
+			} else if (value instanceof NumericTag) {
+				sb.append(value);
+			} else {
+				sb.append(value.toString());
+			}
+		}
+		
+		sb.append("]");
+		return sb.toString();
 	}
 	
 	// 数量格式化
 	private static String formatCount(long count) {
-		if (count < 64) return count + "个";
+		if (count == 0) return "0个";
 		
-		long items = count % 64;
-		long sets = (count / 64) % 27;
-		long boxes = (count / 64 / 27) % 27;
-		long chests = (count / 64 / 27 / 27) % 27;
-		long largeChests = (count / 64 / 27 / 27 / 27) % 27;
+		final long SET_SIZE = 64;
+		final long BOX_SIZE = 27;
+		
+		long items = count % SET_SIZE;
+		long sets = (count / SET_SIZE) % BOX_SIZE;
+		long boxes = (count / SET_SIZE / BOX_SIZE) % BOX_SIZE;
+		long chests = (count / SET_SIZE / BOX_SIZE / BOX_SIZE) % BOX_SIZE;
+		long largeChests = (count / SET_SIZE / BOX_SIZE / BOX_SIZE / BOX_SIZE) % BOX_SIZE;
 		
 		StringBuilder sb = new StringBuilder();
 		if (largeChests > 0) sb.append(largeChests).append("大箱盒");

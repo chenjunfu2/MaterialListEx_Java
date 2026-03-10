@@ -4,7 +4,7 @@
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="litematica.exporter.LitematicaExporter" />
     <module name="MaterialListEx_Java.main" />
-    <option name="PROGRAM_PARAMETERS" value="test.litematic" />
+    <option name="PROGRAM_PARAMETERS" value="test2.litematic" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
