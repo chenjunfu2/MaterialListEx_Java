@@ -27,19 +27,15 @@ public class LitematicaExporter {
 		
 		// 读取NBT文件
 		CompoundTag root;
-		try (InputStream is = Files.newInputStream(Paths.get(path));
-		     GZIPInputStream gzis = new GZIPInputStream(is)) {
-			root = NbtIo.readCompressed(gzis);
+		try
+		{
+			root = NbtIo.readCompressed(Files.newInputStream(Paths.get(path)));
 		}
-		
-		// 获取Regions
-		if (root.size() != 1) {
-			System.err.println("Invalid root size");
+		catch (IOException e)
+		{
+			System.err.println("Read Exception: " + e);
 			return;
 		}
-		
-		String rootName = root.getString("");
-		System.out.println("Root: " + rootName);
 		
 		CompoundTag regions = root.getCompound("Regions");
 		List<RegionStats> regionStatsList = processRegions(regions);

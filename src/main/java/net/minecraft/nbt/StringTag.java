@@ -1,5 +1,6 @@
 package net.minecraft.nbt;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
@@ -13,6 +14,10 @@ public class StringTag implements Tag {
     @Override
     public void write(DataOutput output) throws IOException {
         output.writeUTF(value);
+    }
+    
+    public static void skipString(DataInput dataInput) throws IOException {
+        dataInput.skipBytes(dataInput.readUnsignedShort());
     }
 
     @Override
