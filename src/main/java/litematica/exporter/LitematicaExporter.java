@@ -39,11 +39,13 @@ public class LitematicaExporter {
 			language = new Language();
 		}
 		
-		String inputFile = args[0];
-		try {
-			processFile(inputFile);
-		} catch (Exception e) {
-			e.printStackTrace();
+		for(var inputFile : args)
+		{
+			try {
+				processFile(inputFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -329,12 +331,48 @@ public class LitematicaExporter {
 		long chests = (count / SET_SIZE / BOX_SIZE / BOX_SIZE) % BOX_SIZE;
 		long largeChests = (count / SET_SIZE / BOX_SIZE / BOX_SIZE / BOX_SIZE) % BOX_SIZE;
 		
+		boolean bOut = false;
 		StringBuilder sb = new StringBuilder();
-		if (largeChests > 0) sb.append(largeChests).append("大箱盒");
-		if (chests > 0) sb.append(chests).append("箱盒");
-		if (boxes > 0) sb.append(boxes).append("盒");
-		if (sets > 0) sb.append(sets).append("组");
-		if (items > 0) sb.append(items).append("个");
+		if (largeChests > 0)
+		{
+			sb.append(largeChests).append("大箱盒");
+			bOut = true;
+		}
+		if (chests > 0)
+		{
+			if(bOut)
+			{
+				sb.append('+');
+			}
+			sb.append(chests).append("箱盒");
+			bOut = true;
+		}
+		if (boxes > 0)
+		{
+			if(bOut)
+			{
+				sb.append('+');
+			}
+			sb.append(boxes).append("盒");
+			bOut = true;
+		}
+		if (sets > 0)
+		{
+			if(bOut)
+			{
+				sb.append('+');
+			}
+			sb.append(sets).append("组");
+			bOut = true;
+		}
+		if (items > 0)
+		{
+			if(bOut)
+			{
+				sb.append('+');
+			}
+			sb.append(items).append("个");
+		}
 		
 		return sb.toString();
 	}
