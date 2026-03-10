@@ -162,7 +162,7 @@ public class BlockProcess {
 		if (name.contains("potted_")) {
 			items.add(new NoTagItem("minecraft:flower_pot", stats.count()));
 			String plantName = name.replace("potted_", "");
-			if (plantName.endsWith("_bush")) {
+			if (plantName.endsWith("_bush") && !plantName.equals("minecraft:dead_bush")) {
 				plantName = plantName.substring(0, plantName.length() - 5);
 			}
 			items.add(new NoTagItem(plantName, stats.count()));
