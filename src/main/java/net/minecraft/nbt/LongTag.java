@@ -50,4 +50,9 @@ public class LongTag extends NumericTag {
         }
 	    return value == other.value;
     }
+    
+    @Override
+    public int hashCode() {
+        return Long.hashCode(value);
+    }
 }

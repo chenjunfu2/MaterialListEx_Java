@@ -50,4 +50,9 @@ public class ShortTag extends NumericTag {
         }
 	    return value == other.value;
     }
+    
+    @Override
+    public int hashCode() {
+        return Short.hashCode(value);
+    }
 }

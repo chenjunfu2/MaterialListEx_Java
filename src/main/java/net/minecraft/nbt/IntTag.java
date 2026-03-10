@@ -50,4 +50,9 @@ public class IntTag extends NumericTag {
         }
 	    return value == other.value;
     }
+    
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(value);
+    }
 }

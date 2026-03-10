@@ -43,4 +43,9 @@ public class IntArrayTag implements Tag {
         }
 	    return Arrays.equals(value, other.value);
     }
+    
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(value);
+    }
 }

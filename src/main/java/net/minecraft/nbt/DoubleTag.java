@@ -50,4 +50,9 @@ public class DoubleTag extends NumericTag {
         }
 	    return Double.doubleToLongBits(value) == Double.doubleToLongBits(other.value);
     }
+    
+    @Override
+    public int hashCode() {
+        return Double.hashCode(value);
+    }
 }

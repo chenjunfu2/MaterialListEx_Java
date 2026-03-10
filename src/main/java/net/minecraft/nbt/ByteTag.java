@@ -54,4 +54,9 @@ public class ByteTag extends NumericTag {
         }
 	    return value == other.value;
     }
+    
+    @Override
+    public int hashCode() {
+        return Byte.hashCode(value);
+    }
 }

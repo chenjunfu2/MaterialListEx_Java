@@ -258,4 +258,9 @@ public class CompoundTag implements Tag {
         }
 	    return tags.equals(other.tags);
     }
+    
+    @Override
+    public int hashCode() {
+        return tags.hashCode();
+    }
 }

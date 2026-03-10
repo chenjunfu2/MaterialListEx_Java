@@ -54,4 +54,9 @@ public class FloatTag extends NumericTag {
         }
 	    return Float.floatToIntBits(value) == Float.floatToIntBits(other.value);
     }
+    
+    @Override
+    public int hashCode() {
+        return Float.hashCode(value);
+    }
 }

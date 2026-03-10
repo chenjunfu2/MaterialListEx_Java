@@ -33,4 +33,9 @@ public class EndTag implements Tag {
 	public boolean equals(Object obj) {
 		return obj instanceof EndTag;
 	}
+	
+	@Override
+	public int hashCode() {
+		return 0;
+	}
 }

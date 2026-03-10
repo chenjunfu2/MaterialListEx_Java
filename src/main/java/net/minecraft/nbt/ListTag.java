@@ -292,11 +292,6 @@ public class ListTag implements Tag {
     }
     
     @Override
-    public int hashCode() {
-        return list.hashCode();
-    }
-    
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
         for (int i = 0; i < list.size(); i++) {
@@ -307,5 +302,10 @@ public class ListTag implements Tag {
         }
         sb.append("]");
         return sb.toString();
+    }
+    
+    @Override
+    public int hashCode() {
+        return list.hashCode();
     }
 }
