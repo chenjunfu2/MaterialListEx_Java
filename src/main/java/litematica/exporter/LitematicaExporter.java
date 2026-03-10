@@ -1,12 +1,10 @@
 package litematica.exporter;
 
-import com.google.gson.JsonObject;
 import net.minecraft.nbt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
-import java.util.zip.GZIPInputStream;
 
 public class LitematicaExporter {
 	
@@ -26,10 +24,12 @@ public class LitematicaExporter {
 				// 尝试从程序所在目录查找
 				String jarPath = LitematicaExporter.class.getProtectionDomain()
 				                                         .getCodeSource().getLocation().getPath();
-				Path jarDir = Paths.get(jarPath).getParent();
-				if (jarDir != null) {
-					langPath = jarDir.resolve(langFile);
+				
+				if (jarPath.startsWith("/") && System.getProperty("os.name").toLowerCase().contains("windows")) {
+					jarPath = jarPath.substring(1); // 去掉开头的 /
 				}
+				
+				langPath = Paths.get(jarPath).resolve(langFile);
 			}
 			
 			language = Language.load(langPath.toString());
@@ -102,7 +102,7 @@ public class LitematicaExporter {
 					writer.printf("%s,%s,%s,%d = %s%n",
 					              translate(Language.KeyType.ITEM, entry.getKey().name),
 					              entry.getKey().name,
-					              serializeTag(entry.getKey().tag),
+					              NbtHelper.serialize(entry.getKey().tag),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -112,7 +112,7 @@ public class LitematicaExporter {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
 						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              serializeTag(itemEntry.getKey().tag),
+						              NbtHelper.serialize(itemEntry.getKey().tag),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -139,7 +139,7 @@ public class LitematicaExporter {
 					writer.printf("%s,%s,%s,%d = %s%n",
 					              translate(Language.KeyType.ITEM, entry.getKey().name),
 					              entry.getKey().name,
-					              serializeTag(entry.getKey().tag),
+					              NbtHelper.serialize(entry.getKey().tag),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -149,7 +149,7 @@ public class LitematicaExporter {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
 						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              serializeTag(itemEntry.getKey().tag),
+						              NbtHelper.serialize(itemEntry.getKey().tag),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -164,7 +164,7 @@ public class LitematicaExporter {
 					writer.printf("%s,%s,%s,%d = %s%n",
 					              translate(Language.KeyType.ITEM, entry.getKey().name),
 					              entry.getKey().name,
-					              serializeTag(entry.getKey().tag),
+					              NbtHelper.serialize(entry.getKey().tag),
 					              entry.getValue().get(),
 					              formatCount(entry.getValue().get()));
 				}
@@ -174,7 +174,7 @@ public class LitematicaExporter {
 						writer.printf("%s,%s,%s,%d = %s,%s%n",
 						              translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						              itemEntry.getKey().name,
-						              serializeTag(itemEntry.getKey().tag),
+						              NbtHelper.serialize(itemEntry.getKey().tag),
 						              itemEntry.getValue().get(),
 						              formatCount(itemEntry.getValue().get()),
 						              parentEntry.getKey());
@@ -232,10 +232,11 @@ public class LitematicaExporter {
 					ItemProcess.unpackContainer(slots.inventories(), 128)
 				);
 				
+				boolean b = entity.name() != null && ! entity.name().isEmpty();
 				for (var item : slots.containers()) {
 					ItemInfo info = new ItemInfo(item.name(), item.tag());
 					stats.entityContainers.add(info, item.count());
-					if (entity.name() != null && !entity.name().isEmpty()) {
+					if (b) {
 						stats.parentInfoEC
 							.computeIfAbsent(entity.name(), k -> new MapSortList<>())
 							.add(info, item.count());
@@ -245,7 +246,7 @@ public class LitematicaExporter {
 				for (var item : slots.inventories()) {
 					ItemInfo info = new ItemInfo(item.name(), item.tag());
 					stats.entityInventories.add(info, item.count());
-					if (entity.name() != null && !entity.name().isEmpty()) {
+					if (b) {
 						stats.parentInfoEI
 							.computeIfAbsent(entity.name(), k -> new MapSortList<>())
 							.add(info, item.count());
@@ -275,73 +276,6 @@ public class LitematicaExporter {
 			return language.translate(type, key);
 		}
 		return key.replace(':', '.');
-	}
-	
-	// 序列化NBT标签
-	private static String serializeTag(CompoundTag tag) {
-		if (tag == null || tag.isEmpty()) {
-			return "";
-		}
-		
-		StringBuilder sb = new StringBuilder("{");
-		boolean first = true;
-		
-		// 排序键名以获得一致输出
-		List<String> keys = new ArrayList<>(tag.getAllKeys());
-		Collections.sort(keys);
-		
-		for (String key : keys) {
-			if (!first) {
-				sb.append(",");
-			}
-			first = false;
-			
-			sb.append("\"").append(key).append("\":");
-			Tag value = tag.get(key);
-			
-			if (value instanceof CompoundTag) {
-				sb.append(serializeTag((CompoundTag) value));
-			} else if (value instanceof ListTag) {
-				sb.append(serializeList((ListTag) value));
-			} else if (value instanceof StringTag) {
-				sb.append("\"").append(value.getAsString()).append("\"");
-			} else if (value instanceof NumericTag) {
-				sb.append(value);
-			} else {
-				sb.append(value.toString());
-			}
-		}
-		
-		sb.append("}");
-		return sb.toString();
-	}
-	
-	private static String serializeList(ListTag list) {
-		StringBuilder sb = new StringBuilder("[");
-		boolean first = true;
-		
-		for (int i = 0; i < list.size(); i++) {
-			if (!first) {
-				sb.append(",");
-			}
-			first = false;
-			
-			Tag value = list.get(i);
-			if (value instanceof CompoundTag) {
-				sb.append(serializeTag((CompoundTag) value));
-			} else if (value instanceof ListTag) {
-				sb.append(serializeList((ListTag) value));
-			} else if (value instanceof StringTag) {
-				sb.append("\"").append(value.getAsString()).append("\"");
-			} else if (value instanceof NumericTag) {
-				sb.append(value);
-			} else {
-				sb.append(value.toString());
-			}
-		}
-		
-		sb.append("]");
-		return sb.toString();
 	}
 	
 	// 数量格式化

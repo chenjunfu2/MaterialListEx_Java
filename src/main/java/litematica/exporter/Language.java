@@ -33,7 +33,7 @@ public class Language {
 	
 	public Language()
 	{
-		data = null;
+		this.data = null;
 	}
 	
 	public static Language load(String filePath) throws IOException {
@@ -45,7 +45,7 @@ public class Language {
 		Path path = Paths.get(filePath);
 		if (!Files.exists(path)) {
 			System.err.println("Language file not found: " + filePath);
-			return new Language(new JsonObject());
+			return new Language();
 		}
 		
 		try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
@@ -55,7 +55,7 @@ public class Language {
 			return lang;
 		} catch (JsonSyntaxException | IllegalStateException e) {
 			System.err.println("JSON parse error: " + e.getMessage());
-			return new Language(new JsonObject());
+			return new Language();
 		}
 	}
 	
