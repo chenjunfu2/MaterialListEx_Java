@@ -172,10 +172,10 @@ public class BlockProcess {
 	// 炼药锅
 	private static boolean processCauldron(BlockStats stats, List<NoTagItem> items) {
 		String name = stats.name();
-		items.add(new NoTagItem("minecraft:cauldron", stats.count()));
 		
 		switch (name) {
 		case "minecraft:water_cauldron":
+			items.add(new NoTagItem("minecraft:cauldron", stats.count()));
 			items.add(new NoTagItem("minecraft:water_bucket", stats.count()));
 			if (stats.properties() != null) {
 				String level = stats.properties().getString("level");
@@ -188,10 +188,12 @@ public class BlockProcess {
 			return true;
 		
 		case "minecraft:lava_cauldron":
+			items.add(new NoTagItem("minecraft:cauldron", stats.count()));
 			items.add(new NoTagItem("minecraft:lava_bucket", stats.count()));
 			return true;
 		
 		case "minecraft:powder_snow_cauldron":
+			items.add(new NoTagItem("minecraft:cauldron", stats.count()));
 			if (stats.properties() != null && "3".equals(stats.properties().getString("level"))) {
 				items.add(new NoTagItem("minecraft:powder_snow_bucket", stats.count()));
 			}
