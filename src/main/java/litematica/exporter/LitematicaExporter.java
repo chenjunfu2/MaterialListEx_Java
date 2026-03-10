@@ -90,7 +90,7 @@ public class LitematicaExporter {
 					writeCSVLine(writer,
 					             translate(Language.KeyType.ITEM, entry.getKey().name()),
 					             entry.getKey().name(),
-					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					             entry.getValue().get() + "个 = " + formatCount(entry.getValue().get())
 					            );
 				}
 				writer.println();
@@ -103,7 +103,7 @@ public class LitematicaExporter {
 					             translate(Language.KeyType.ITEM, entry.getKey().name),
 					             entry.getKey().name,
 					             NbtHelper.serialize(entry.getKey().tag),
-					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					             entry.getValue().get() + "个 = " + formatCount(entry.getValue().get())
 					            );
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
@@ -113,8 +113,8 @@ public class LitematicaExporter {
 						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						             itemEntry.getKey().name,
 						             NbtHelper.serialize(itemEntry.getKey().tag),
-						             itemEntry.getValue().get() + " = " + formatCount(itemEntry.getValue().get()),
-						             parentEntry.getKey()
+						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get()),
+						             translate(Language.KeyType.ITEM, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")"
 						            );
 					}
 				}
@@ -127,7 +127,7 @@ public class LitematicaExporter {
 					writeCSVLine(writer,
 					             translate(Language.KeyType.ENTITY, entry.getKey().name()),
 					             entry.getKey().name(),
-					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					             entry.getValue().get() + "个 = " + formatCount(entry.getValue().get())
 					            );
 				}
 				writer.println();
@@ -140,7 +140,7 @@ public class LitematicaExporter {
 					             translate(Language.KeyType.ITEM, entry.getKey().name),
 					             entry.getKey().name,
 					             NbtHelper.serialize(entry.getKey().tag),
-					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					             entry.getValue().get() + "个 = " + formatCount(entry.getValue().get())
 					            );
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
@@ -150,8 +150,8 @@ public class LitematicaExporter {
 						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						             itemEntry.getKey().name,
 						             NbtHelper.serialize(itemEntry.getKey().tag),
-						             itemEntry.getValue().get() + " = " + formatCount(itemEntry.getValue().get()),
-						             parentEntry.getKey()
+						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get()),
+						             translate(Language.KeyType.ENTITY, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")"
 						            );
 					}
 				}
@@ -165,7 +165,7 @@ public class LitematicaExporter {
 					             translate(Language.KeyType.ITEM, entry.getKey().name),
 					             entry.getKey().name,
 					             NbtHelper.serialize(entry.getKey().tag),
-					             entry.getValue().get() + " = " + formatCount(entry.getValue().get())
+					             entry.getValue().get() + "个 = " + formatCount(entry.getValue().get())
 					            );
 				}
 				writer.println("名称(Name),键名(Key),标签(Tag),数量(Count),来源(source)");
@@ -175,8 +175,8 @@ public class LitematicaExporter {
 						             translate(Language.KeyType.ITEM, itemEntry.getKey().name),
 						             itemEntry.getKey().name,
 						             NbtHelper.serialize(itemEntry.getKey().tag),
-						             itemEntry.getValue().get() + " = " + formatCount(itemEntry.getValue().get()),
-						             parentEntry.getKey()
+						             itemEntry.getValue().get() + "个 = " + formatCount(itemEntry.getValue().get()),
+						             translate(Language.KeyType.ENTITY, parentEntry.getKey()) + "(" + parentEntry.getKey() + ")"
 						            );
 					}
 				}
