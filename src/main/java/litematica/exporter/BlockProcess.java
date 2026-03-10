@@ -94,22 +94,23 @@ public class BlockProcess {
 		if (UNITEMED_BLOCKS.contains(stats.name())) return items;
 		
 		// 处理各种特殊方块
-		if (processDoublePartBlocks(stats, items)) return items;
-		if (processWallVariant(stats, items)) return items;
-		if (processFlowerPot(stats, items)) return items;
-		if (processCauldron(stats, items)) return items;
-		if (processCandleCake(stats, items)) return items;
-		if (processAliasBlocks(stats, items)) return items;
-		if (processFluid(stats, items)) return items;
-		if (processSlab(stats, items)) return items;
-		if (processCluster(stats, items)) return items;
-		if (processPolyAttach(stats, items)) return items;
-		if (processMultiPartPlant(stats, items)) return items;
-		if (processDoublePlant(stats, items)) return items;
-		if (processCrop(stats, items)) return items;
+		boolean b =
+		processDoublePartBlocks(stats, items) ||
+		processWallVariant(stats, items) ||
+		processFlowerPot(stats, items) ||
+		processCauldron(stats, items) ||
+		processCandleCake(stats, items) ||
+		processAliasBlocks(stats, items) ||
+		processFluid(stats, items) ||
+		processSlab(stats, items) ||
+		processCluster(stats, items) ||
+		processPolyAttach(stats, items) ||
+		processMultiPartPlant(stats, items) ||
+		processDoublePlant(stats, items) ||
+		processCrop(stats, items);
 		
-		// 普通方块
-		items.add(new NoTagItem(stats.name(), stats.count()));
+		if(!b)// 普通方块
+			items.add(new NoTagItem(stats.name(), stats.count()));
 		
 		// 含水处理
 		processWaterlogged(stats, items);
@@ -135,8 +136,9 @@ public class BlockProcess {
 			return true;
 		}
 		
-		if (name.contains("piston") && !name.equals("minecraft:piston_head")) {
-			items.add(new NoTagItem(name, stats.count()));
+		if (name.contains("piston")) {
+			if(!name.equals("minecraft:piston_head"))
+				items.add(new NoTagItem(name, stats.count()));
 			return true;
 		}
 		
